@@ -130,6 +130,26 @@ void test_replace_byte() {
     printf("r1 = %x\n", r2);
 }
 
+/*
+ * 示例代码：截取参数x的最高位字节
+ *
+ * 比如x = 987654321，二进制表示为0x3ade68b1
+ * 执行get_msb(x)结果是58，二进制为0x3a，其中3a就是x的最高位字节。
+ *
+ * 方法是把最高位字节右移到最低位，再通过与掩码的位操作来截取数据。
+ * 参数x类型是int，sizeof(int)为4字节，除去最高位字节后剩余3个字节，
+ * 每个字节占用8位，所以需要右移3*8=24位，而下面的<<3等同于乘以8，
+ * 但是在代码层面更加高效。再右移后通过& 0xFF就可以截取最低位字节。
+ * */
+/* Get most significant byte from x */
+int get_msb(int x) {
+    /* Shift by w-8 */
+    int shift_val = (sizeof(int) - 1) << 3;
+    /* Arithmetic shift */
+    int xright = x >> shift_val;
+    /* Zero all but LSB */
+    return xright & 0xFF;
+}
 
 void print_args(int argc, char *argv[]) {
     int i;
