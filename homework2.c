@@ -218,25 +218,44 @@ void test_int_shifts() {
 unsigned srl(unsigned x, int k) {
     // 指定算术右移
     unsigned xsra = (int) x >> k;
-    //todo
-    return 1;
+    
+    // 既然算数右移把最高k位变成了1，
+    // 所以后续的改动需要把最高k位都变成0
+
+    // 计算需要左移的位数
+    unsigned n = (sizeof(int) << 3) - k;
+    // 生成最高k位是0，剩余位是1的掩码
+    unsigned mask = ~(~0 << n);
+    // 消除最高k位的值，实现逻辑右移
+    return xsra & mask;
 }
 
 int sra(int x, int k) {
     // 指定逻辑右移
     int xsrl = (unsigned) x >> k;
-    //todo
-    return 1;
+    
+    // 判断x的最高位，如果是1，就需要把最高k位的值还原成1
+    unsigned w = sizeof(int) << 3;
+    unsigned msb_mask = 1 << (w - 1);
+    // 如果最高位是1
+    if (!((unsigned)x & msb_mask ^ msb_mask)) {
+        // 生成最高k位是1的掩码
+        int mask = ~0 << (w - k);
+        // 把最高k位的值都变成1
+        return xsrl | mask;
+    }
+    // 如果最高位是0，就返回逻辑右移的结果
+    return xsrl;
 }
 
 void test_srl_and_sra() {
     assert(srl(4, 2) == 1);
     assert(srl(-1, 24) == 0xff);
-    assert(srl(0x87654321, 3) == 0x00087654);
+    assert(srl(0x87654321, 12) == 0x87654);
 
-    assert(sra(10, 2) == 4);
+    assert(sra(10, 2) == 2);
     assert(sra(-1, 2) == -1);
-    assert(sra(0x87654321, 3) == 0xfff87654);
+    assert(sra(0x87654321, 12) == 0xfff87654);
 }
 
 
