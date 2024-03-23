@@ -158,25 +158,42 @@ int get_msb(int x) {
 /**
  * 2.61 写一个c表达式，在下列条件下产生1，其他情况得到0，假设x是int类型
  * A. x的任何位都等于1
- * B. x的任何位栋等于0
+ * B. x的任何位都等于0
  * C. x的最低有效字节中的位都等于1
  * D. x的最高有效字节中的位都等于0
  * 
  * 要求遵守位级整数编码规则，以及不能使用==和!=
 */
-int check_bits(int x) {
-    return 1; //todo
+int check_bits_a(int x) {
+    return !(x ^ ~0);
+}
+
+int check_bits_b(int x) {
+    return !(x ^ 0);
+}
+
+int check_bits_c(int x) {
+    return !(x & 0xFF ^ 0xFF);
+}
+
+int check_bits_d(int x) {
+    int n = (sizeof(int) - 1) << 3;
+    int y = (x >> n) & 0xFF;
+    return !(y ^ 0);
 }
 
 void test_check_bits() {
-    assert(check_bits(-1) == 1);
-    assert(check_bits(0) == 1);
-    assert(check_bits(0x66283aff) == 1);
-    assert(check_bits(0x00bcef32) == 1);
-    assert(check_bits(1) == 0);
-    assert(check_bits(-2) == 0);
-    assert(check_bits(0x83ac92bf) == 0);
-    assert(check_bits(0x01234567) == 0);
+    assert(check_bits_a(-1) == 1);
+    assert(check_bits_a(1) == 0);
+
+    assert(check_bits_b(0) == 1);
+    assert(check_bits_b(1) == 0);
+
+    assert(check_bits_c(0x66283aff) == 1);
+    assert(check_bits_c(0x83ac92bf) == 0);
+
+    assert(check_bits_d(0x00bcef32) == 1);
+    assert(check_bits_d(0x01234567) == 0);
 }
 
 
