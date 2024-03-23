@@ -201,7 +201,12 @@ void test_check_bits() {
  * 2.62 编写函数，判断机器是否支持算术右移
 */
 int int_shifts_are_arithmetic() {
-    return 1; //todo
+    int i = -1;
+    return i >> 1 == -1;
+}
+
+void test_int_shifts() {
+    printf("arithmetic shifts %s\n", int_shifts_are_arithmetic() ? "works" : "not supported");
 }
 
 
