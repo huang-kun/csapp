@@ -288,8 +288,27 @@ void test_any_odd_one() {
  * 最多包含12个算术运算、位运算和逻辑运算
 */
 int odd_ones(unsigned x) {
-    return 1; //todo
+    int odd = 0;
+    for (int i = 0; i < 32; i++) {
+        if (x & 1) {
+            odd += 1;
+        }
+        x = x >> 1;
+    }
+    return odd % 2 != 0;
 }
+
+void test_odd_ones() {
+    assert(odd_ones(0b1111) == 0);
+    assert(odd_ones(0b1101) == 1);
+    assert(odd_ones(0b1010) == 0);
+    assert(odd_ones(0b1000) == 1);
+    assert(odd_ones(0b101111) == 1);
+    assert(odd_ones(0b101101) == 0);
+    assert(odd_ones(0) == 0);
+    assert(odd_ones(1) == 1);
+}
+
 
 /**
  * 2.66 生成掩码，要求除最左侧值为1以外的其他位都是0
@@ -318,9 +337,13 @@ void test_leftmost_one() {
  * 
 */
 int int_size_is_32() {
-    int set_msb = 1 << 31;
-    int beyond_msb = 1 << 32;
-    return set_msb && !beyond_msb;
+    // 1 << 32
+    // warning: left shift count >= width of type [-Wshift-count-overflow]
+
+    // int set_msb = 1 << 31;
+    // int beyond_msb = 1 << 32;
+    // return set_msb && !beyond_msb;
+    return 0; //todo
 }
 
 
