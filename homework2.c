@@ -328,16 +328,24 @@ int int_size_is_32() {
  * 2.68 生成掩码，让最低n位设成1，其他高位设成0
  * 
  * 举例：n=6 -> 0x3f, n=17 -> 0x1ffff
+ * 取值：1 <= n <= w
  * 要求遵守位级整数编码规则，注意n=w的情况
 */
 int lower_one_mask(int n) {
-    return 0; //todo
+    // 如果左移位数n = w，结果取模，即 n mod w = 0
+    // int类型假设32位，如果n=32，生成掩码就是0，而非期望的0xffffffff
+    // 这个问题我参考了https://stackoverflow.com/a/4201315
+    // 让左移的基数类型转为unsigned long (~0UL)，突破32位size的限制
+    return ~(~0UL << n);
 }
 
 void test_lower_one_mask() {
+    assert(lower_one_mask(1) == 0x1);
+    assert(lower_one_mask(2) == 0x3);
     assert(lower_one_mask(6) == 0x3f);
     assert(lower_one_mask(17) == 0x1ffff);
-    assert(lower_one_mask(sizeof(size_t)) == ~0);
+    assert(lower_one_mask(31) == 0x7fffffff);
+    assert(lower_one_mask(32) == 0xffffffff);
 }
 
 
@@ -394,9 +402,11 @@ int main(int argc, char *argv[]) {
     // test_merge_byte();
     // test_replace_byte();
     // test_check_bits();
+    // test_int_shifts();
     // test_srl_and_sra();
     // test_any_odd_one();
-
+    // test_odd_ones();
+    test_lower_one_mask();
 }
 
 
