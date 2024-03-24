@@ -265,12 +265,19 @@ void test_srl_and_sra() {
  * 要求遵守位级整数编码规则，可以假设int有32位
 */
 int any_odd_one(unsigned x) {
-    return 1; //todo
+    // 解题思路：
+    // 1.删除x所有偶数位的值后若为0，说明x没有奇数位存在1
+    // 2.删除偶数位的方法是跟掩码0b0101...0101进行与操作，
+    //   因为该掩码把偶数位都设置为0
+    // 3.假设int为32位，相应的掩码就是0x55555555
+    return (x & 0x55555555) != 0;
 }
 
 void test_any_odd_one() {
     assert(any_odd_one(0b1101) == 1);
-    assert(any_odd_one(0b1001) == 0);    
+    assert(any_odd_one(0b1001) == 1);
+    assert(any_odd_one(0b1000) == 0);
+    assert(any_odd_one(0b0100) == 1);
 }
 
 
