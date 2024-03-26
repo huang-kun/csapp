@@ -288,14 +288,15 @@ void test_any_odd_one() {
  * 最多包含12个算术运算、位运算和逻辑运算
 */
 int odd_ones(unsigned x) {
-    int odd = 0;
-    for (int i = 0; i < 32; i++) {
-        if (x & 1) {
-            odd += 1;
-        }
-        x = x >> 1;
-    }
-    return odd % 2 != 0;
+    // 这个问题咨询了一位北大的实习生大神，他的思路是：
+    // 把x的二进制位从中间对半分割，让左右两部分对齐后
+    // 做异或，消除部分偶数个数的1，再循环上述步骤即可
+    unsigned y = (x >> 16) ^ (x & 0xFFFF);
+    y = (y >> 8) ^ (y & 0xFF);
+    y = (y >> 4) ^ (y & 0xF);
+    y = (y >> 2) ^ (y & 0b11);
+    y = (y >> 1) ^ (y & 1);
+    return y;
 }
 
 void test_odd_ones() {
@@ -428,8 +429,8 @@ int main(int argc, char *argv[]) {
     // test_int_shifts();
     // test_srl_and_sra();
     // test_any_odd_one();
-    // test_odd_ones();
-    test_lower_one_mask();
+    test_odd_ones();
+    // test_lower_one_mask();
 }
 
 
