@@ -340,6 +340,8 @@ void test_odd_ones() {
  * 提示：先将x转换成[0...011...1]的位向量
 */
 int leftmost_one(unsigned x) {
+    // 说实话这道题确实没有头绪，直到看了网上的答案
+    // https://dreamanddead.github.io/CSAPP-3e-Solutions/chapter2/2.66/
     return 1; //todo;
 }
 
