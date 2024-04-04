@@ -131,7 +131,7 @@ void test_replace_byte() {
     printf("r1 = %x\n", r2);
 }
 
-/*
+/**
  * 示例代码：截取参数x的最高位字节
  *
  * 比如x = 987654321，二进制表示为0x3ade68b1
@@ -144,7 +144,7 @@ void test_replace_byte() {
  * 参数x类型是int，sizeof(int)为4字节，除去最高位字节后剩余3个字节，
  * 每个字节占用8位，所以需要右移3*8=24位，而下面的<<3等同于乘以8，
  * 但是在代码层面更加高效。再右移后通过& 0xFF就可以截取最低位字节。
- * */
+ */
 /* Get most significant byte from x */
 int get_msb(int x) {
     /* Shift by w-8 */
@@ -153,6 +153,25 @@ int get_msb(int x) {
     int xright = x >> shift_val;
     /* Zero all but LSB */
     return xright & 0xFF;
+}
+
+/**
+ * 练习题 2.42 写一个函数div16，对于整数参数x返回x/16的值。
+ * 
+ * 根据书里对于除以2的幂的补码除法，使用算术右移的表达式为
+ * (x<0 ? x+(1<<k)-1 : x) >> k
+ * 把这道题用表达式写出来就是：
+ * k=4, (x<0 ? x+15 : x) >> 4
+ * 但是该题目要求不能使用任何if或者?:条件判断。
+ * 
+ * 这里直接给出书里的参考答案：利用一个诀窍，表达式x>>31
+ * 产生一个字，如果x是负数，这个字为全1，否则为全0.
+ */
+int div16(int x) {
+    // 当x>=0，bias=0，当x<0, bias=15
+    // 所以这行代码相当于替代了上述表达式里的条件判断
+    int bias = (x >> 31) & 0xF;
+    return (x + bias) >> 4;
 }
 
 /**
